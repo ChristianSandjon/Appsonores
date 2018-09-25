@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Appsonores</string>
+    <string name="valider">Valider</string>
+    <string name="application_sonore">APPLICATION SONORE</string>
 </resources>
