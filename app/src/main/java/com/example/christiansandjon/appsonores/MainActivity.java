@@ -2,6 +2,9 @@ package com.example.christiansandjon.appsonores;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayList<DataModel> dataModels;
     private SonorAdapter adapter;
+    private String levelValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +34,30 @@ public class MainActivity extends AppCompatActivity {
         listView=findViewById(R.id.list_sonore);
 
         //spinner couleur
-        String[] colors = new String[]{"Vert", "Orange", "Rouge"};
-        ArrayAdapter<String> adapterColors = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, colors);
+        String[] colors = getResources().getStringArray(R.array.colors);
+        ArrayAdapter<String> adapterColors = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item ,colors);
         spinner_level.setAdapter(adapterColors);
 
+
         //spinner decibel
-        String[] decibels = new String[]{"0", "10","20", "30","40", "50","60", "70","80", "90","100", "110","120"};
+        String[] decibels = getResources().getStringArray(R.array.decibels);
         ArrayAdapter<String> adapterDecibel = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, decibels);
         spinner_decibel.setAdapter(adapterDecibel);
 
-        // data
+        spinner_level.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+
+
+// data
         dataModels= new ArrayList<>();
 
         dataModels.add(new DataModel("Bruxelles", "bf formation", "20/09/2018",20.4));
