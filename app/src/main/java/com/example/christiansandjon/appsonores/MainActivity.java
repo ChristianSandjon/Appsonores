@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayList<DataModel> dataModels;
     private SonorAdapter adapter;
-    private String levelValue;
+    private String levelValue, decibelValue, searchValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,56 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
+                switch(position){
+                    case 0 : levelValue = "Vert";
+                    break;
+                    case 1 : levelValue = "Orange";
+                    break;
+                    case 2 : levelValue = "Rouge";
+                    break;
+                }
+                spinner_level.setSelection(position);
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spinner_decibel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected( AdapterView<?> parent, View view, int position, long id ) {
+
+                    switch ( position ) {
+                        case 0: decibelValue = "10";
+                        break;
+                        case 1: decibelValue = "20";
+                            break;
+                        case 2: decibelValue = "30";
+                            break;
+                        case 3: decibelValue = "40";
+                            break;
+                        case 4: decibelValue = "50";
+                            break;
+                        case 5: decibelValue = "60";
+                            break;
+                        case 6: decibelValue = "70";
+                            break;
+                        case 7: decibelValue = "80";
+                            break;
+                        case 8: decibelValue = "90";
+                            break;
+                        case 9: decibelValue = "100";
+                            break;
+                        case 10: decibelValue = "110";
+                            break;
+                        case 11: decibelValue = "120";
+                        break;
+                        default:
+                            break;
+                    }
+                    spinner_decibel.setSelection(position);
+                }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
