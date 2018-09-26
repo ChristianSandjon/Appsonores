@@ -1,5 +1,6 @@
 package com.example.christiansandjon.appsonores;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +16,9 @@ import com.example.christiansandjon.appsonores.Tools.SonorAdapter;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+
+
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private SearchView searchView;
     private Spinner spinner_level, spinner_decibel;
@@ -23,6 +26,10 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<DataModel> dataModels;
     private SonorAdapter adapter;
     private String levelValue, decibelValue, searchValue;
+    public static final String KEY = "sonor";
+    private ArrayList<DataModel> datamodels;
+    private DataModel dataModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
         spinner_decibel = findViewById(R.id.spinner_decibel);
         spinner_level = findViewById(R.id.spinner_level);
         listView=findViewById(R.id.list_sonore);
+
+        //searchview region
+
+        searchView = findViewById(R.id.search_view);
+
+        searchView.setOnQueryTextListener(this);
+        boolean isIconfied=searchView.isIconfiedByDefault();
+        searchView.setIconifiedByDefault(false);
 
         //spinner couleur
         String[] colors = getResources().getStringArray(R.array.colors);
@@ -125,5 +140,17 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String text = newText;
+        adapter.filter(text);
+        return false;
     }
 }

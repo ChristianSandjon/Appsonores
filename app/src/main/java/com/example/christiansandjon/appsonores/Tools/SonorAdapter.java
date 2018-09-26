@@ -14,10 +14,12 @@ import com.example.christiansandjon.appsonores.Models.DataModel;
 import com.example.christiansandjon.appsonores.R;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SonorAdapter extends ArrayAdapter<DataModel> implements View.OnClickListener {
 
     private ArrayList<DataModel> datamodels;
+    private ArrayList<DataModel> filter = null;
     Context context;
     public static final String KEY = "sonor";
 
@@ -105,5 +107,21 @@ public class SonorAdapter extends ArrayAdapter<DataModel> implements View.OnClic
         viewHolder.info.setTag(position);
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    // Filter Class
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        filter.clear();
+        if (charText.length() == 0) {
+            filter.addAll(datamodels);
+        } else {
+            for (DataModel wp : datamodels) {
+                if (wp.getVille().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    filter.add(wp);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }

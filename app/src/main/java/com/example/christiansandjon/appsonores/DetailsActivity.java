@@ -22,7 +22,7 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         initialize();
-        DataModel dataModel = getIntent().getParcelableExtra(SonorAdapter.KEY);
+        DataModel dataModel = getIntent().getParcelableExtra(MainActivity.KEY);
         ville.setText(dataModel.getVille());
         adresse.setText(dataModel.getAdresse());
         date.setText(dataModel.getDate());
