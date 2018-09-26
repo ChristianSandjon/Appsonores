@@ -2,6 +2,8 @@ package com.example.christiansandjon.appsonores;
 
 import android.os.AsyncTask;
 
+import com.example.christiansandjon.appsonores.Models.DataModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,14 +14,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Time;
-import java.util.Date;
+import java.util.ArrayList;
 
-public class RequestTask extends AsyncTask<String, Void, StationInfo> {
+
+public class RequestTask extends AsyncTask<String, Void, ArrayList<DataModel>> {
 
     //region Callback
     public interface IRequestEvent {
-        void onRequestResult(StationInfo info);
+        void onRequestResult(ArrayList<DataModel> info);
     }
 
     private IRequestEvent callback;
@@ -29,23 +31,21 @@ public class RequestTask extends AsyncTask<String, Void, StationInfo> {
     }
     //endregion
 
-    private final String URL_BASE = "https://api.irail.be/liveboard/?station=";
-    private final String URL_OPTION = "&format=json&lang=fr";
+    private ArrayList<DataModel> infosonores;
+    private final String URL_BASE = "http://smartcityteam5.eu-central-1.elasticbeanstalk.com";
+    private final String URL_OPTION = "/measurements";
 
 
     @Override
-    protected StationInfo doInBackground(String... stations) {
-        if (stations == null || stations.length != 1 || stations[0].trim().isEmpty()) {
-            return null;
-        }
+    protected ArrayList<DataModel> doInBackground(String... datas) {
 
-        //region Request to WebAPI
+        //region Request API
 
         String requestResult = null;
         HttpURLConnection connection = null;
 
         try {
-            URL url = new URL(URL_BASE + stations[0] + URL_OPTION);
+            URL url = new URL(URL_BASE + URL_OPTION);
 
             //Send Request URL
             connection = (HttpURLConnection) url.openConnection();
@@ -74,44 +74,32 @@ public class RequestTask extends AsyncTask<String, Void, StationInfo> {
         } catch (MalformedURLException e) {
             //Creation del'objet URL
             e.printStackTrace();
-        } catch (IOException e) {
-            //UTilisation de la connection
-            e.printStackTrace();
-        } finally {
+        }
+          catch (IOException ioe){
+              ioe.printStackTrace();
+            }
+
+            finally {
             if (connection != null) {
                 connection.disconnect();
             }
         }
         //endregion
 
-        //region Convert : Result => Json => StationInfo
-        StationInfo response = null;
+        infosonores = new ArrayList<>();
 
         if(requestResult != null){
 
             try {
-                JSONObject json = new JSONObject(requestResult);
+                JSONArray liste = new JSONArray(requestResult);
 
-                //Creation de l'objet reponse avec le  nom de la gare
-                String name = json.getString("station");
-                response = new StationInfo(name);
+                for (int i = 0; i < liste.length(); i++) {
 
-                JSONObject departures = json.getJSONObject("departures");
-                int nbElement = departures.getInt("number");
-                JSONArray trains = departures.getJSONArray("departure");
+                    JSONObject infoSon = liste.getJSONObject(i); // recupere chaque item de la liste
+                    String date = infoSon.getString("date");
+                    Double decibel = infoSon.getDouble("laeq60");
 
-                for (int i = 0; i < nbElement && i < 15; i++) {
-
-                    JSONObject train = trains.getJSONObject(i);
-
-                    String dest = train.getString("station");
-                    int plateform = train.getInt("platform");
-
-                    //Utilisation de l'objet "LocalDate" disponible a partir de l'API 26
-                    Date time = (new Date(train.getLong("time") * 1000L));
-                    Time delay = new Time(train.getInt("delay") * 1000L);
-
-                    response.addDeparture(new TrainInfo(dest, plateform, time, delay));
+                    infosonores.add(new DataModel("Bruxelles"+i,"rue de stalle 60"+i,date,"15h00", decibel));
                 }
 
             } catch (JSONException e) {
@@ -120,13 +108,13 @@ public class RequestTask extends AsyncTask<String, Void, StationInfo> {
         }
         //endregion
 
-        return response;
+        return infosonores;
     }
 
     @Override
-    protected void onPostExecute(StationInfo stationInfo) {
+    protected void onPostExecute(ArrayList<DataModel> DataModel) {
         if(callback != null) {
-            callback.onRequestResult(stationInfo);
+            callback.onRequestResult(DataModel);
         }
     }
 }

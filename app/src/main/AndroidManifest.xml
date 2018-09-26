@@ -18,6 +18,14 @@
         </activity>
         <activity android:name=".DetailsActivity"
             android:parentActivityName=".MainActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBgzbCb1MKQBJhafYGlVC3rBsdBh0aHzJI"/>
+
+
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

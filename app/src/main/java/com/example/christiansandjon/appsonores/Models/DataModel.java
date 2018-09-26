@@ -9,12 +9,14 @@ public class DataModel implements Parcelable{
     private String ville;
     private String adresse;
     private String date;
+    private String heure;
     private Double db;
 
-    public DataModel(String ville, String adresse, String date, Double db) {
+    public DataModel(String ville, String adresse, String date, String heure, Double db) {
         this.ville = ville;
         this.adresse = adresse;
         this.date = date;
+        this.heure = heure;
         this.db = db;
     }
 
@@ -50,8 +52,16 @@ public class DataModel implements Parcelable{
         this.db = db;
     }
 
+    public String getHeure() {
+        return heure;
+    }
+
+    public void setHeure(String heure) {
+        this.heure = heure;
+    }
+
     public DataModel(Parcel in){
-        String[] data = new String[4];
+        String[] data = new String[5];
 
         in.readStringArray(data);
 
@@ -59,7 +69,8 @@ public class DataModel implements Parcelable{
         this.ville = data[0];
         this.adresse = data[1];
         this.date = data[2];
-        this.db = Double.parseDouble(data[3]);
+        this.heure = data[3];
+        this.db = Double.parseDouble(data[4]);
     }
 
     @Override
@@ -69,9 +80,12 @@ public class DataModel implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[] {this.ville,
+        dest.writeStringArray(new String[] {
+                this.ville,
                 this.adresse,
-                this.date, ""+this.db});
+                this.date,
+                this.heure,
+                ""+this.db});
     }
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public DataModel createFromParcel(Parcel in) {

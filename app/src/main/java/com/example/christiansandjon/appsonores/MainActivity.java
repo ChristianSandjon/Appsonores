@@ -1,9 +1,7 @@
 package com.example.christiansandjon.appsonores;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,18 +15,15 @@ import com.example.christiansandjon.appsonores.Tools.SonorAdapter;
 import java.util.ArrayList;
 
 
-
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, RequestTask.IRequestEvent, View.OnClickListener {
 
     private SearchView searchView;
     private Spinner spinner_level, spinner_decibel;
     private ListView listView;
-    private ArrayList<DataModel> dataModels;
+    //private ArrayList<DataModel> dataModels;
     private SonorAdapter adapter;
-    private String levelValue, decibelValue, searchValue;
     public static final String KEY = "sonor";
-    private ArrayList<DataModel> datamodels;
-    private DataModel dataModel;
+    private String levelValue, decibelValue, searchValue;
 
 
     @Override
@@ -100,14 +95,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                             break;
                         case 7: decibelValue = "80";
                             break;
-                        case 8: decibelValue = "90";
-                            break;
-                        case 9: decibelValue = "100";
-                            break;
-                        case 10: decibelValue = "110";
-                            break;
-                        case 11: decibelValue = "120";
-                        break;
                         default:
                             break;
                     }
@@ -119,27 +106,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         });
 
-
-
-// data
-        dataModels= new ArrayList<>();
-
-        dataModels.add(new DataModel("Bruxelles", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Anvers", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Liege", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Bruxelles", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Anvers", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Liege", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Bruxelles", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Anvers", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Liege", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Bruxelles", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Anvers", "bf formation", "20/09/2018",20.4));
-        dataModels.add(new DataModel("Liege", "bf formation", "20/09/2018",20.4));
-        adapter= new SonorAdapter(dataModels,getApplicationContext());
-
-        listView.setAdapter(adapter);
-
+        loadDatas();
     }
 
     @Override
@@ -152,5 +119,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         String text = newText;
         adapter.filter(text);
         return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+    }
+
+    public void loadDatas(){
+        RequestTask task = new RequestTask();
+        task.setCallback(this);
+        task.execute();
+    }
+
+    @Override
+    public void onRequestResult(ArrayList<DataModel> info) {
+        adapter= new SonorAdapter(info, getApplicationContext());
+        listView.setAdapter(adapter);
     }
 }

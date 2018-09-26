@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.christiansandjon.appsonores.DetailsActivity;
 import com.example.christiansandjon.appsonores.Models.DataModel;
 import com.example.christiansandjon.appsonores.R;
+import com.example.christiansandjon.appsonores.RequestTask;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -22,17 +23,22 @@ public class SonorAdapter extends ArrayAdapter<DataModel> implements View.OnClic
     private ArrayList<DataModel> filter = null;
     Context context;
     public static final String KEY = "sonor";
+    private RequestTask.IRequestEvent callback;
 
-    public SonorAdapter(@NonNull Context context, int resource, ArrayList<DataModel> datamodels) {
+    public SonorAdapter(@NonNull Context context, int resource, ArrayList<DataModel> datamodels, ArrayList<DataModel> filter, Context context1, RequestTask.IRequestEvent callback) {
         super(context, resource);
         this.datamodels = datamodels;
-        this.context = context;
+        this.filter = filter;
+        this.context = context1;
+        this.callback = callback;
     }
+
     // View lookup cache
    private static class ViewHolder {
         TextView txtVille;
         TextView txtAdresse;
         TextView txtDate;
+        TextView txtHeure;
         TextView txtDecibel;
         ImageView info;
     }
@@ -65,14 +71,13 @@ public class SonorAdapter extends ArrayAdapter<DataModel> implements View.OnClic
         context.startActivity(intent);
 
     }
-    //private int lastPosition = -1;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
+
         DataModel dataModel = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
+
+        ViewHolder viewHolder;
 
         final View result;
 
@@ -84,6 +89,7 @@ public class SonorAdapter extends ArrayAdapter<DataModel> implements View.OnClic
             viewHolder.txtVille = convertView.findViewById(R.id.ville);
             viewHolder.txtAdresse =  convertView.findViewById(R.id.adresse);
             viewHolder.txtDate =  convertView.findViewById(R.id.date);
+            viewHolder.txtHeure = convertView.findViewById(R.id.heure);
             viewHolder.txtDecibel = convertView.findViewById(R.id.decibel);
             viewHolder.info = convertView.findViewById(R.id.item_info);
 
@@ -95,13 +101,10 @@ public class SonorAdapter extends ArrayAdapter<DataModel> implements View.OnClic
             result=convertView;
         }
 
-        /*Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
-        lastPosition = position;*/
-
         viewHolder.txtVille.setText(dataModel.getVille());
         viewHolder.txtAdresse.setText(dataModel.getAdresse());
         viewHolder.txtDate.setText(""+dataModel.getDate());
+        viewHolder.txtHeure.setText(""+dataModel.getHeure());
         viewHolder.txtDecibel.setText(""+dataModel.getDb());
         viewHolder.info.setOnClickListener(this);
         viewHolder.info.setTag(position);

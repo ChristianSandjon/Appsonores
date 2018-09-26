@@ -14,7 +14,7 @@ import static com.example.christiansandjon.appsonores.Tools.SonorAdapter.KEY;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    private TextView ville,adresse,date,decibel;
+    private TextView ville,adresse,date,heure,decibel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,9 @@ public class DetailsActivity extends AppCompatActivity {
         ville.setText(dataModel.getVille());
         adresse.setText(dataModel.getAdresse());
         date.setText(dataModel.getDate());
+        heure.setText(dataModel.getHeure());
         decibel.setText(""+dataModel.getDb());
+
 
     }
 
@@ -34,10 +36,7 @@ public class DetailsActivity extends AppCompatActivity {
         ville = findViewById(R.id.ville);
         adresse = findViewById(R.id.adresse);
         date = findViewById(R.id.date);
+        heure = findViewById(R.id.heure);
         decibel = findViewById(R.id.decibel);
-
-
-
-
     }
 }
